@@ -1,0 +1,118 @@
+/* Default theme: Latte (light mode) */
+:root {
+    --base: #eff1f5;
+    --mantle: #e6e9ef;
+    --crust: #dce0e8;
+    --text: #4c4f69;
+    --subtext: #5c5f77;
+    --surface: #ccd0da;
+    --overlay: #bcc0cc;
+    --accent: #8caaee; /* Default blue */
+    --letter-spacing: 0.05em; /* Default letter spacing */
+}
+
+/* Dark mode: Frappe */
+[data-theme="frappe"] {
+    --base: #303446;
+    --mantle: #292c3c;
+    --crust: #232634;
+    --text: #c6d0f5;
+    --subtext: #a5adce;
+    --surface: #414559;
+    --overlay: #51576d;
+}
+
+/* Dynamic accent color */
+[data-accent="blue"] { --accent: #8caaee; }
+[data-accent="green"] { --accent: #a6d189; }
+[data-accent="red"] { --accent: #e78284; }
+[data-accent="yellow"] { --accent: #e5c890; }
+[data-accent="pink"] { --accent: #f4b8e4; }
+[data-accent="mauve"] { --accent: #ca9ee6; }
+[data-accent="peach"] { --accent: #ef9f76; }
+
+/* General styles */
+html, body {
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: var(--base);
+    color: var(--text);
+    font-family: 'IBM Plex Mono', monospace;
+    letter-spacing: var(--letter-spacing);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+a {
+    color: var(--accent);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Home Page Styles */
+#container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100vw;
+    position: relative;
+    overflow: hidden;
+}
+
+h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    animation: fadeIn 1s ease-in-out;
+}
+
+#settings-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+#settings-button:hover {
+    transform: rotate(90deg);
+}
+
+#content {
+    text-align: center;
+    animation: slideIn 0.8s ease-in-out;
+}
+
+#file-picker {
+    background-color: var(--accent);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+#file-picker:hover {
+    background-color: var(--overlay);
+    transform: scale(1.05);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
