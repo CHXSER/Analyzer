@@ -2,18 +2,18 @@ use dioxus::prelude::*;
 use directories::UserDirs;
 use rfd::AsyncFileDialog;
 
-use crate::HomeContext;
-
 #[component]
 pub fn Home() -> Element {
-    let pick = async move |_evt| match pick_dir().await {
-        Some(a) => {
-            consume_context::<HomeContext>().path.set(a);
-        }
-        None => consume_context::<HomeContext>().path.set("".to_string()),
+    let folder = use_signal(|| "".to_string());
+    let pick = move |_evt| {
+        let mut folder = folder.to_owned();
+        spawn(async move {
+            match pick_dir().await {
+                Some(a) => folder.set(a),
+                None => folder.set("".to_string()),
+            }
+        });
     };
-
-    //let folder_path = use_context::<HomeContext>();
 
     rsx! {
         div { id: "container",
@@ -22,7 +22,7 @@ pub fn Home() -> Element {
             div { id: "content",
                 p { "Select a folder to analyze" }
                 button { onclick: pick, id: "file-picker", "Choose Folder" }
-                        //p { "{folder_path.path}" }
+                p { "{folder()}" }
             }
         }
     }
