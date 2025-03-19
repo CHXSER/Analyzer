@@ -10,7 +10,7 @@ pub struct Video {
 }
 
 impl Video {
-    pub fn new(file_path: &Path) -> Self {
+    pub fn new(file_path: &Path) -> Option<Video> {
         let options = CreationOptions {
             skip_forward_amount: 0.0,
             duration: 4.0,
@@ -18,11 +18,14 @@ impl Video {
         };
 
         let builder = VideoHashBuilder::from_options(options);
-        let h = builder.hash(file_path.to_path_buf()).unwrap();
+        let h = builder.hash(file_path.to_path_buf());
 
-        Video {
-            path: file_path.to_path_buf(),
-            hash: h,
+        match h {
+            Ok(ha) => Some(Video {
+                path: file_path.to_path_buf(),
+                hash: ha,
+            }),
+            Err(_e) => None,
         }
     }
 }

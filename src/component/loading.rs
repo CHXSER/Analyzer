@@ -6,6 +6,8 @@ use std::{
 use dioxus::prelude::*;
 use rayon::iter::{IntoParallelIterator, ParallelIterator};
 
+use crate::model::{media::Media, photo::Photo, video::Video};
+
 #[component]
 pub fn Loading(folder_path: String) -> Element {
     let mut progress = use_signal(|| 0);
@@ -28,29 +30,38 @@ pub fn Loading(folder_path: String) -> Element {
                     path.is_file()
                         && path
                             .extension()
-                            .map(|ext| matches!(ext.to_str(), Some("jpg" | "png" | "mp4" | "webm")))
+                            .map(|ext| {
+                                matches!(
+                                    ext.to_str(),
+                                    Some("jpg" | "png" | "jpeg" | "gif" | "mp4" | "webm")
+                                )
+                            })
                             .unwrap_or(false)
                 })
                 .collect();
 
             total_files.set(files.len());
 
-            files.into_par_iter().for_each(|path| {
-                if let Some(ext) = path.extension().and_then(|e| e.to_str()) {
-                    match ext {
-                        "jpg" | "png" => {
-                            //
+            let media_files: Vec<Media> = files
+                .into_par_iter()
+                .filter_map(|path| {
+                    let media = if let Some(ext) = path.extension().and_then(|e| e.to_str()) {
+                        match ext {
+                            "jpg" | "jpeg" | "png" => Photo::new(&path).map(Media::Photo),
+                            "mp4" | "gif" | "webm" => Video::new(&path).map(Media::Video),
+                            _ => None,
                         }
-                        "mp4" | "webm" => {
-                            //
-                        }
-                        _ => {}
-                    }
-                }
-                let mut count = completed_files.lock().unwrap();
-                *count += 1;
-                tx.send(*count).unwrap();
-            });
+                    } else {
+                        None
+                    };
+
+                    let mut count = completed_files.lock().unwrap();
+                    *count += 1;
+                    tx.send(*count).unwrap();
+
+                    media
+                })
+                .collect();
         }
     });
 
