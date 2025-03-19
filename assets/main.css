@@ -68,6 +68,7 @@ a:hover {
 h1 {
     font-size: 3rem;
     margin-bottom: 20px;
+    user-select: none;
     animation: fadeIn 1s ease-in-out;
 }
 
@@ -88,6 +89,7 @@ h1 {
 
 #content {
     text-align: center;
+    user-select: none;
     animation: slideIn 0.8s ease-in-out;
 }
 
