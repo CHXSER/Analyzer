@@ -1,8 +1,10 @@
 use dioxus::prelude::*;
 
 mod component;
+mod model;
 
 use component::home::Home;
+use component::loading::Loading;
 
 static MAIN_CSS: Asset = asset!("/assets/main.css");
 static FAVICON: Asset = asset!("/assets/favicon.ico");
@@ -37,11 +39,15 @@ fn App() -> Element {
         //use_context_provider(|| HomeContext { path: "".to_string() });
         document::Link { rel: "icon", href: FAVICON }
         document::Link { rel: "stylesheet", href: MAIN_CSS }
-        Home {}
+        Router::<Route> {}
     }
 }
 
-#[derive(Clone, Copy)]
-struct HomeContext {
-    path: Signal<String>,
+#[derive(Routable, Clone, Debug, PartialEq)]
+pub enum Route {
+    #[route("/")]
+    Home,
+
+    #[route("/loading/:folder_path")]
+    Loading { folder_path: String },
 }

@@ -2,6 +2,8 @@ use dioxus::prelude::*;
 use directories::UserDirs;
 use rfd::AsyncFileDialog;
 
+use crate::Route;
+
 #[component]
 pub fn Home() -> Element {
     let folder = use_signal(|| "".to_string());
@@ -9,7 +11,10 @@ pub fn Home() -> Element {
         let mut folder = folder.to_owned();
         spawn(async move {
             match pick_dir().await {
-                Some(a) => folder.set(a),
+                Some(a) => {
+                    folder.set(a.clone());
+                    let _ = use_navigator().push(Route::Loading { folder_path: a });
+                }
                 None => folder.set("".to_string()),
             }
         });
