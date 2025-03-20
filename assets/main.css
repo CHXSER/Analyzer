@@ -109,20 +109,72 @@ h1 {
     transform: scale(1.05);
 }
 
-#progress-bar {
-    width: 100%;
-    height: 20px;
-    background: #ccc;
-    border-radius: 10px;
-    overflow: hidden;
-    margin-top: 10px;
+.loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: var(--base);
 }
 
-.progress-fill {
-    height: 100%;
-    background: #8caaee;
-    transition: width 0.2s ease-in-out;
+.loading-content {
+    text-align: center;
+    background: var(--mantle);
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
+
+h2 {
+    font-size: 1.5rem;
+    color: var(--text);
+}
+
+.folder-path {
+    font-size: 0.9rem;
+    color: var(--subtext);
+    margin-bottom: 20px;
+}
+
+.progress-bar-container {
+    width: 100%;
+    height: 8px;
+    background: var(--overlay);
+    border-radius: 5px;
+    overflow: hidden;
+    margin: 20px 0;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--surface));
+    animation: loading-animation 1.5s infinite linear;
+}
+
+/* Modalità scura (Frappe) */
+[data-theme="frappe"] .loading-content {
+    background: var(--mantle);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="frappe"] .progress-bar-container {
+    background: var(--surface);
+}
+
+[data-theme="frappe"] .progress-bar {
+    background: linear-gradient(90deg, var(--accent), var(--overlay));
+}
+
+@keyframes loading-animation {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
+
 
 @keyframes fadeIn {
     from { opacity: 0; }

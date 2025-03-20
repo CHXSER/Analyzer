@@ -1,86 +1,94 @@
-use std::{
-    path::PathBuf,
-    sync::{mpsc, Arc, Mutex},
-};
-
 use dioxus::prelude::*;
 use rayon::iter::{IntoParallelIterator, ParallelIterator};
+use std::path::PathBuf;
+use tokio::sync::oneshot;
 
-use crate::model::{media::Media, photo::Photo, video::Video};
+use crate::{
+    model::{media::Media, photo::Photo, video::Video},
+    Route,
+};
 
 #[component]
 pub fn Loading(folder_path: String) -> Element {
-    let mut progress = use_signal(|| 0);
-    let total_files = use_signal(|| 1);
-    let completed_files = Arc::new(Mutex::new(0));
-
-    let (tx, rx) = mpsc::channel();
+    let mut loading = use_signal(|| true);
 
     let folder_path_clone = folder_path.clone();
-    spawn({
-        let mut total_files = total_files.to_owned();
-        let completed_files = completed_files.clone();
-        let tx = tx.clone();
+    if loading() {
+        spawn({
+            async move {
+                let (tx, rx) = oneshot::channel();
 
-        async move {
-            let files: Vec<PathBuf> = std::fs::read_dir(folder_path_clone)
-                .unwrap()
-                .filter_map(|entry| entry.ok().map(|e| e.path()))
-                .filter(|path| {
-                    path.is_file()
-                        && path
-                            .extension()
-                            .map(|ext| {
-                                matches!(
-                                    ext.to_str(),
-                                    Some("jpg" | "png" | "jpeg" | "gif" | "mp4" | "webm")
-                                )
+                tokio::spawn(async move {
+                    let media_files: Vec<Media> = tokio::task::spawn_blocking(move || {
+                        let files: Vec<PathBuf> = std::fs::read_dir(&folder_path_clone)
+                            .unwrap()
+                            .filter_map(|entry| entry.ok().map(|e| e.path()))
+                            .filter(|path| {
+                                path.is_file()
+                                    && path
+                                        .extension()
+                                        .map(|ext| {
+                                            matches!(
+                                                ext.to_str(),
+                                                Some(
+                                                    "jpg" | "png" | "jpeg" | "gif" | "mp4" | "webm"
+                                                )
+                                            )
+                                        })
+                                        .unwrap_or(false)
                             })
-                            .unwrap_or(false)
-                })
-                .collect();
+                            .collect();
 
-            total_files.set(files.len());
+                        files
+                            .into_par_iter()
+                            .filter_map(|path| {
+                                let media =
+                                    if let Some(ext) = path.extension().and_then(|e| e.to_str()) {
+                                        match ext {
+                                            "jpg" | "jpeg" | "png" => {
+                                                Photo::new(&path).map(Media::Photo)
+                                            }
+                                            "mp4" | "gif" | "webm" => {
+                                                Video::new(&path).map(Media::Video)
+                                            }
+                                            _ => None,
+                                        }
+                                    } else {
+                                        None
+                                    };
+                                media
+                            })
+                            .collect::<Vec<Media>>()
+                    })
+                    .await
+                    .unwrap();
 
-            let media_files: Vec<Media> = files
-                .into_par_iter()
-                .filter_map(|path| {
-                    let media = if let Some(ext) = path.extension().and_then(|e| e.to_str()) {
-                        match ext {
-                            "jpg" | "jpeg" | "png" => Photo::new(&path).map(Media::Photo),
-                            "mp4" | "gif" | "webm" => Video::new(&path).map(Media::Video),
-                            _ => None,
-                        }
-                    } else {
-                        None
-                    };
+                    let _ = tx.send(media_files);
+                });
 
-                    let mut count = completed_files.lock().unwrap();
-                    *count += 1;
-                    tx.send(*count).unwrap();
-
-                    media
-                })
-                .collect();
-        }
-    });
-
-    spawn(async move {
-        while let Ok(value) = rx.recv() {
-            progress.set(value);
-        }
-    });
+                let _ = rx.await;
+                loading.set(false);
+            }
+        });
+    } else {
+        let _ = use_navigator().push(Route::Home);
+    }
 
     rsx! {
-        div { id: "loading-container",
-            h1 { "Analyzing {folder_path}" }
-            div { id: "progress-bar",
-                div {
-                    style: "width: {progress() * 100 / total_files()}%;",
-                    class: "progress-fill",
+        div { class: "loading-container",
+            div { class: "loading-content",
+                h2 { "Analyzing..." }
+                p { class: "folder-path", "{folder_path}" }
+
+                if loading() {
+                    div { class: "progress-bar-container",
+                        div { class: "progress-bar" }
+                    }
+                    p { "Processing files..." }
+                } else {
+                    p { "Analysis completed!" }
                 }
             }
-            p { "{progress()} / {total_files()} ({progress() * 100 / total_files()}%)" }
         }
     }
 }

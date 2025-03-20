@@ -3,6 +3,7 @@ use dioxus::prelude::*;
 mod component;
 mod model;
 
+use component::comparison::Comparison;
 use component::home::Home;
 use component::loading::Loading;
 
@@ -50,4 +51,7 @@ pub enum Route {
 
     #[route("/loading/:folder_path")]
     Loading { folder_path: String },
+
+    #[route("/comparison")]
+    Comparison,
 }
