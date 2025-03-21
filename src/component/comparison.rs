@@ -1,8 +1,5 @@
 use dioxus::prelude::*;
 
-//const PIC: Asset = asset!("/assets/pic.jpg");
-const VIDEO: Asset = asset!("/assets/video.mp4");
-
 #[component]
 pub fn Comparison() -> Element {
     rsx! {
@@ -107,14 +104,6 @@ pub fn Comparison() -> Element {
 #[component]
 fn MediaDisplay(id: &'static str) -> Element {
     rsx! {
-        div { class: "media-container",
-            video {
-                class: "media",
-                controls: false,
-                autoplay: false,
-                id: "{id}",
-                src: VIDEO,
-            }
-        }
+        div { class: "media-container" }
     }
 }
