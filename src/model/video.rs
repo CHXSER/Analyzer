@@ -3,7 +3,8 @@ use vid_dup_finder_lib::{
     ffmpeg_builder::VideoHashBuilder, CreationOptions, Cropdetect, VideoHash,
 };
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
+#[allow(dead_code)]
 pub struct Video {
     path: PathBuf,
     pub hash: VideoHash,

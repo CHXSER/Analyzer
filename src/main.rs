@@ -6,6 +6,7 @@ mod model;
 use component::comparison::Comparison;
 use component::home::Home;
 use component::loading::Loading;
+use model::media::Media;
 
 static MAIN_CSS: Asset = asset!("/assets/main.css");
 static FAVICON: Asset = asset!("/assets/favicon.ico");
@@ -46,12 +47,12 @@ fn App() -> Element {
 
 #[derive(Routable, Clone, Debug, PartialEq)]
 pub enum Route {
-    #[route("/")]
+    #[route("/home")]
     Home,
 
     #[route("/loading/:folder_path")]
     Loading { folder_path: String },
 
-    #[route("/comparison")]
+    #[route("/")]
     Comparison,
 }
