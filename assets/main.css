@@ -357,6 +357,8 @@ h2 {
 .circle-button {
     align-items: center;
     justify-content: center;
+    text-align: center;
+    vertical-align: center;
     width: 50px;
     height: 50px;
     border-radius: 50%;
@@ -369,15 +371,17 @@ h2 {
 }
 
 .circle-button:hover {
+    color: var(--accent);
     background-color: var(--overlay);
     transform: scale(1.1);
 }
 
 .icon {
+    color: var(--base);
     align-items: center;
     justify-content: center;
-    width: 24px;
-    height: 24px;
+    width: 27px;
+    height: 27px;
 }
 
 .progress-video {
