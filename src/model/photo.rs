@@ -1,4 +1,3 @@
-use dioxus::prelude::Props;
 use image_hasher::{HasherConfig, ImageHash};
 use rayon::iter::{IntoParallelRefIterator, ParallelIterator};
 use std::{collections::HashMap, path::PathBuf};
@@ -26,6 +25,7 @@ impl Photo {
     }
 }
 
+#[derive(Debug, Clone, PartialEq)]
 #[allow(dead_code)]
 pub struct PhotoMatchGroup {
     pub images: Vec<Photo>,

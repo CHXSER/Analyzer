@@ -6,10 +6,12 @@ mod model;
 use component::comparison::Comparison;
 use component::home::Home;
 use component::loading::Loading;
-use model::media::Media;
+use model::media::DuplicateMedia;
 
 static MAIN_CSS: Asset = asset!("/assets/main.css");
 static FAVICON: Asset = asset!("/assets/favicon.ico");
+
+static DUPS: GlobalSignal<Vec<DuplicateMedia>> = Global::new(Vec::new);
 
 fn main() {
     #[cfg(feature = "desktop")]
@@ -38,7 +40,6 @@ fn main() {
 #[component]
 fn App() -> Element {
     rsx! {
-        //use_context_provider(|| HomeContext { path: "".to_string() });
         document::Link { rel: "icon", href: FAVICON }
         document::Link { rel: "stylesheet", href: MAIN_CSS }
         Router::<Route> {}
@@ -47,12 +48,12 @@ fn App() -> Element {
 
 #[derive(Routable, Clone, Debug, PartialEq)]
 pub enum Route {
-    #[route("/home")]
+    #[route("/")]
     Home,
 
     #[route("/loading/:folder_path")]
     Loading { folder_path: String },
 
-    #[route("/")]
+    #[route("/comparison")]
     Comparison,
 }

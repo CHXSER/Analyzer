@@ -2,10 +2,15 @@ use dioxus::prelude::*;
 use rayon::iter::{IntoParallelIterator, ParallelIterator};
 use std::path::PathBuf;
 use tokio::sync::oneshot;
+use vid_dup_finder_lib::{search, MatchGroup, VideoHash};
 
 use crate::{
-    model::{media::Media, photo::Photo, video::Video},
-    Route,
+    model::{
+        media::{DuplicateMedia, Media},
+        photo::{self, find_similar_images, Photo},
+        video::Video,
+    },
+    Route, DUPS,
 };
 
 #[component]
@@ -13,7 +18,7 @@ pub fn Loading(folder_path: String) -> Element {
     let mut loading = use_signal(|| true);
 
     let folder_path_clone = folder_path.clone();
-    if loading() {
+    if loading() && DUPS.is_empty() {
         spawn({
             async move {
                 let (tx, rx) = oneshot::channel();
@@ -63,15 +68,46 @@ pub fn Loading(folder_path: String) -> Element {
                     .await
                     .unwrap();
 
-                    let _ = tx.send(media_files);
+                    let mut photos: Vec<Photo> = Vec::new();
+                    let mut videos: Vec<Video> = Vec::new();
+
+                    for media in media_files {
+                        match media {
+                            Media::Photo(a) => {
+                                photos.push(a);
+                            }
+                            Media::Video(a) => {
+                                videos.push(a);
+                            }
+                        }
+                    }
+
+                    let photo_duplicates: Vec<photo::PhotoMatchGroup> =
+                        find_similar_images(&photos, 5);
+                    let video_hashes: Vec<VideoHash> =
+                        videos.iter().map(|vid| vid.hash.clone()).collect();
+                    let video_duplicates: Vec<MatchGroup> = search(video_hashes, 0.35);
+
+                    let mut dups: Vec<DuplicateMedia> = Vec::new();
+
+                    for group in photo_duplicates {
+                        dups.push(DuplicateMedia::PhotoMatchGroup(group));
+                    }
+
+                    for group in video_duplicates {
+                        dups.push(DuplicateMedia::VideoMatchGroup(group));
+                    }
+
+                    let _ = tx.send(dups);
                 });
 
-                let _ = rx.await;
+                let a = rx.await.unwrap();
+                *DUPS.write() = a;
                 loading.set(false);
             }
         });
     } else {
-        let _ = use_navigator().push(Route::Home);
+        let _ = use_navigator().push(Route::Comparison {});
     }
 
     rsx! {
