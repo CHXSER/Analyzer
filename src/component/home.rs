@@ -28,7 +28,6 @@ pub fn Home() -> Element {
             div { id: "content",
                 p { "Select a folder to analyze" }
                 button { onclick: pick, id: "file-picker", "Choose Folder" }
-                p { "{folder()}" }
             }
         }
     }
