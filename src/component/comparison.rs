@@ -1,4 +1,7 @@
+use std::os::windows::fs::MetadataExt;
+
 use dioxus::prelude::*;
+use humansize::{format_size, DECIMAL};
 use urlencoding::encode;
 
 use crate::{model::media::DuplicateMedia, Route, DUPS};
@@ -9,8 +12,6 @@ pub fn Comparison() -> Element {
         use_navigator().push(Route::Home);
     }
 
-    // TODO: cercare il modo per capire se si tratta di video o foto
-    // vedendo l'elemento a current_index se è un PhotoMediaGroup o VideoMediaGroup
     let mut current_index: Signal<usize> = use_signal(|| 0);
 
     rsx! {
@@ -32,8 +33,8 @@ pub fn Comparison() -> Element {
             }
 
             div { class: "file-info-container",
-                div { class: "file-info", "File info 1" }
-                div { class: "file-info", "File info 2" }
+                FileInfoLeft { file: DUPS()[current_index()].clone() }
+                FileInfoRight { file: DUPS()[current_index()].clone() }
             }
 
             div { class: "media-pair",
@@ -252,6 +253,72 @@ fn VideoControls() -> Element {
                     xmlns: "http://www.w3.org/2000/svg",
                     fill: "currentColor",
                     path { d: "M301.1 34.8C312.6 40 320 51.4 320 64l0 384c0 12.6-7.4 24-18.9 29.2s-25 3.1-34.4-5.3L131.8 352 64 352c-35.3 0-64-28.7-64-64l0-64c0-35.3 28.7-64 64-64l67.8 0L266.7 40.1c9.4-8.4 22.9-10.4 34.4-5.3zM425 167l55 55 55-55c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-55 55 55 55c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-55-55-55 55c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l55-55-55-55c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0z" }
+                }
+            }
+        }
+    }
+}
+
+#[component]
+fn FileInfoLeft(file: DuplicateMedia) -> Element {
+    rsx! {
+        div {
+            class: "file-info",
+            div { class: "file-info-internal",
+                match file {
+                    DuplicateMedia::PhotoMatchGroup(a) => {
+                        let image_path = a.images[0].path.clone();
+                        let file_name = image_path.file_name().unwrap().to_str().unwrap();
+                        let file_size = std::fs::metadata(&image_path).unwrap().file_size();
+                        let real_size = format_size(file_size, DECIMAL);
+                        rsx! {
+                            span { class: "filename", "Name: {file_name}" }
+                            span { "Size: {real_size}" }
+                        }
+                    }
+                    DuplicateMedia::VideoMatchGroup(a) => {
+                        let first_path = a.duplicates().next().unwrap();
+                        let file_name = first_path.file_name().unwrap().to_str().unwrap();
+                        let file_size = std::fs::metadata(first_path).unwrap().file_size();
+                        let real_size = format_size(file_size, DECIMAL);
+                        rsx! {
+                            span { class: "filename", "Name: {file_name}" }
+                            span { "Size: {real_size}" }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+#[component]
+fn FileInfoRight(file: DuplicateMedia) -> Element {
+    rsx! {
+        div {
+            class: "file-info",
+            div { class: "file-info-internal",
+                match file {
+                    DuplicateMedia::PhotoMatchGroup(a) => {
+                        let image_path = a.images[1].path.clone();
+                        let file_name = image_path.file_name().unwrap().to_str().unwrap();
+                        let file_size = std::fs::metadata(&image_path).unwrap().file_size();
+                        let real_size = format_size(file_size, DECIMAL);
+                        rsx! {
+                            span { class: "filename", "Name: {file_name}" }
+                            span { "Size: {real_size}" }
+                        }
+                    }
+                    DuplicateMedia::VideoMatchGroup(a) => {
+                        let first_path = a.duplicates().last().unwrap();
+                        let file_name = first_path.file_name().unwrap().to_str().unwrap();
+                        let file_size = std::fs::metadata(first_path).unwrap().file_size();
+                        let real_size = format_size(file_size, DECIMAL);
+                        rsx! {
+                            span { class: "filename", "Name: {file_name}" }
+                            span { "Size: {real_size}" }
+                        }
+                    }
                 }
             }
         }
