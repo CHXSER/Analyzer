@@ -326,8 +326,10 @@ fn FileInfoLeft(file: DuplicateMedia) -> Element {
                         let file_size = std::fs::metadata(&image_path).unwrap().file_size();
                         let real_size = format_size(file_size, DECIMAL);
                         rsx! {
-                            span { class: "filename", "Name: {file_name}" }
-                            span { "Size: {real_size}" }
+                            div { class: "file-info-internal-left",
+                                span { class: "filename", "Name: {file_name}" }
+                                span { "Size: {real_size}" }
+                            }
                         }
                     }
                     DuplicateMedia::VideoMatchGroup(a) => {
@@ -336,8 +338,10 @@ fn FileInfoLeft(file: DuplicateMedia) -> Element {
                         let file_size = std::fs::metadata(first_path).unwrap().file_size();
                         let real_size = format_size(file_size, DECIMAL);
                         rsx! {
-                            span { class: "filename", "Name: {file_name}" }
-                            span { "Size: {real_size}" }
+                            div { class: "file-info-internal-left",
+                                span { class: "filename", "Name: {file_name}" }
+                                span { "Size: {real_size}" }
+                            }
                         }
                     }
                 }
@@ -359,8 +363,10 @@ fn FileInfoRight(file: DuplicateMedia) -> Element {
                         let file_size = std::fs::metadata(&image_path).unwrap().file_size();
                         let real_size = format_size(file_size, DECIMAL);
                         rsx! {
-                            span { class: "filename", "Name: {file_name}" }
-                            span { "Size: {real_size}" }
+                            div { class: "file-info-internal-right",
+                                span { class: "filename", "Name: {file_name}" }
+                                span { "Size: {real_size}" }
+                            }
                         }
                     }
                     DuplicateMedia::VideoMatchGroup(a) => {
@@ -369,8 +375,10 @@ fn FileInfoRight(file: DuplicateMedia) -> Element {
                         let file_size = std::fs::metadata(first_path).unwrap().file_size();
                         let real_size = format_size(file_size, DECIMAL);
                         rsx! {
-                            span { class: "filename", "Name: {file_name}" }
-                            span { "Size: {real_size}" }
+                            div { class: "file-info-internal-right",
+                                span { class: "filename", "Name: {file_name}" }
+                                span { "Size: {real_size}" }
+                            }
                         }
                     }
                 }

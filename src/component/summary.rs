@@ -1,6 +1,6 @@
 use dioxus::prelude::*;
 
-use crate::{Route, DELETE_QUEUE};
+use crate::{Route, DELETE_QUEUE, DUPS};
 
 #[component]
 pub fn Summary() -> Element {
@@ -45,14 +45,18 @@ fn Buttons() -> Element {
                 onclick: move |_| {
                     for path in DELETE_QUEUE().0 {
                         std::fs::remove_file(path).unwrap();
-                        use_navigator().push(Route::Home);
                     }
+                    DUPS.write().clear();
+                    DELETE_QUEUE().0.clear();
+                    use_navigator().push(Route::Home);
                 },
                 "CONFIRM"
             }
             button {
                 id: "file-picker",
                 onclick: move |_| {
+                    DUPS.write().clear();
+                    DELETE_QUEUE().0.clear();
                     use_navigator().push(Route::Home);
                 },
                 "CANCEL"
