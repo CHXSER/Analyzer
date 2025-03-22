@@ -2832,6 +2832,7 @@ dependencies = [
  "rayon",
  "rfd 0.15.3",
  "tokio",
+ "urlencoding",
  "vid_dup_finder_lib",
 ]
 
