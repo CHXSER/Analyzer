@@ -12,7 +12,7 @@ directories = "6.0.0"
 image = "0.25.5"
 image_hasher = "3.0.0"
 rayon = "1.10.0"
-rfd = "0.15.3"
+rfd = { version = "0.15.3", features = ["async-std"]}
 tokio = "1.44.1"
 vid_dup_finder_lib = "0.2.0"
 

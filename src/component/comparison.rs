@@ -96,7 +96,8 @@ fn MediaDisplayLeft(media: DuplicateMedia) -> Element {
                         img { class: "media", src: a.images[0].path.clone().to_str().unwrap_or("") }
                     }
                 }
-                DuplicateMedia::VideoMatchGroup(_) => {
+                DuplicateMedia::VideoMatchGroup(a) => {
+                    println!("A sinistra -> {:?}", a.duplicates().next());
                     rsx! {
                         video {}
                     }
@@ -118,7 +119,8 @@ fn MediaDisplayRight(media: DuplicateMedia) -> Element {
                     }
                 }
                 DuplicateMedia::VideoMatchGroup(a) => {
-                    println!("{:?}", a.duplicates().next());
+                    a.duplicates().next();
+                    println!("A destra -> {:?}", a.duplicates().next());
                     rsx! {
                         video {
                         }

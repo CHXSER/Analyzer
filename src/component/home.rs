@@ -1,6 +1,7 @@
 use dioxus::prelude::*;
 use directories::UserDirs;
 use rfd::AsyncFileDialog;
+use std::path::PathBuf;
 
 use crate::Route;
 
@@ -37,7 +38,7 @@ async fn pick_dir() -> Option<String> {
     let user_dir = UserDirs::new().unwrap();
     let folder = AsyncFileDialog::new()
         .set_title("Folder to analyze")
-        .set_directory(user_dir.picture_dir().unwrap())
+        .set_directory(user_dir.picture_dir().unwrap_or(PathBuf::from("/").as_path()))
         .pick_folder()
         .await;
     folder.map(|path| String::from(path.path().to_str().unwrap()))
