@@ -1,9 +1,62 @@
 use dioxus::prelude::*;
 
-use crate::DELETE_QUEUE;
+use crate::{Route, DELETE_QUEUE};
 
 #[component]
 pub fn Summary() -> Element {
-    println!("{:?}", DELETE_QUEUE);
-    rsx! {}
+    rsx! {
+        div { id: "container",
+            h1 { "Summary" }
+            p { "Confirm changes or go back" }
+            div { id: "content",
+                DeleteFiles {}
+                IgnorePairs {}
+                Buttons {}
+            }
+        }
+    }
+}
+
+#[component]
+fn DeleteFiles() -> Element {
+    rsx! {
+        div { class: "delete-container",
+            p { "Files to delete: " }
+            for path in DELETE_QUEUE().0 {
+                p { "{path.to_str().unwrap()}" }
+            }
+        }
+    }
+}
+
+#[component]
+fn IgnorePairs() -> Element {
+    rsx! {
+        div { class: "ignore-container" }
+    }
+}
+
+#[component]
+fn Buttons() -> Element {
+    rsx! {
+        div { class: "confirm-container",
+            button {
+                id: "file-picker",
+                onclick: move |_| {
+                    for path in DELETE_QUEUE().0 {
+                        std::fs::remove_file(path).unwrap();
+                        use_navigator().push(Route::Home);
+                    }
+                },
+                "CONFIRM"
+            }
+            button {
+                id: "file-picker",
+                onclick: move |_| {
+                    use_navigator().push(Route::Home);
+                },
+                "CANCEL"
+            }
+        }
+    }
 }

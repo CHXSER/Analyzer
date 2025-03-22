@@ -409,3 +409,24 @@ h2 {
 .progress-bar-video {
     width: 80%;
 }
+
+/* ==========================
+   🎖️ SUMMARY
+========================== */
+.delete-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.ignore-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.confirm-container {
+    display: flex;
+    margin: auto;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+}

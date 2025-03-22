@@ -121,7 +121,6 @@ fn MediaDisplayLeft(media: DuplicateMedia) -> Element {
                     let first_path = a.duplicates().next().unwrap();
                     let is_gif = first_path.extension().unwrap() == "gif";
                     let encoded_path = encode(first_path.to_str().unwrap());
-                    println!("A sinistra -> {:?}", first_path);
                     rsx! {
                         if is_gif {
                             img {
