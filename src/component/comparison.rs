@@ -73,6 +73,7 @@ fn MediaDisplayLeft(media: DuplicateMedia) -> Element {
                     println!("A sinistra -> {:?}", first_path);
                     rsx! {
                         video {
+                            id: "video-left",
                             class: "media",
                             src: "{encoded_path}",
                             autoplay: true,
@@ -103,6 +104,7 @@ fn MediaDisplayRight(media: DuplicateMedia) -> Element {
                     println!("A destra -> {:?}", last_path);
                     rsx! {
                         video {
+                            id: "video-right",
                             class: "media",
                             src: "{encoded_path}",
                             autoplay: true,
@@ -119,7 +121,22 @@ fn MediaDisplayRight(media: DuplicateMedia) -> Element {
 fn VideoControls() -> Element {
     rsx! {
         div { class: "controls-column",
-            button { class: "circle-button", onclick: |_| {},
+            // PLAY BUTTON
+            button {
+                class: "circle-button",
+                onclick: |_| async move {
+                    document::eval(r#"
+                        const rightVideo = document.getElementById('video-right');
+                        if (rightVideo) {
+                            rightVideo.play();
+                        }
+
+                        const leftVideo = document.getElementById('video-left');
+                        if (leftVideo) {
+                            leftVideo.play();
+                        }
+                    "#).await.unwrap();
+                },
                 svg {
                     class: "icon",
                     view_box: "0 0 384 512",
@@ -128,7 +145,20 @@ fn VideoControls() -> Element {
                     path { d: "M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80L0 432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z" }
                 }
             }
-            button { class: "circle-button", onclick: |_| {},
+            // PAUSE BUTTON
+            button { class: "circle-button", onclick: |_| async move {
+                document::eval(r#"
+                        const rightVideo = document.getElementById('video-right');
+                        if (rightVideo) {
+                            rightVideo.pause();
+                        }
+
+                        const leftVideo = document.getElementById('video-left');
+                        if (leftVideo) {
+                            leftVideo.pause();
+                        }
+                    "#).await.unwrap();
+                },
                 svg {
                     class: "icon",
                     view_box: "0 0 320 512",
@@ -137,7 +167,24 @@ fn VideoControls() -> Element {
                     path { d: "M48 64C21.5 64 0 85.5 0 112L0 400c0 26.5 21.5 48 48 48l32 0c26.5 0 48-21.5 48-48l0-288c0-26.5-21.5-48-48-48L48 64zm192 0c-26.5 0-48 21.5-48 48l0 288c0 26.5 21.5 48 48 48l32 0c26.5 0 48-21.5 48-48l0-288c0-26.5-21.5-48-48-48l-32 0z" }
                 }
             }
-            button { class: "circle-button", onclick: |_| {},
+            // START OVER BUTTON
+            button { class: "circle-button", onclick: |_| async move {
+                document::eval(r#"
+                    const rightVideo = document.getElementById('video-right');
+                        if (rightVideo) {
+                            rightVideo.pause();
+                            rightVideo.currentTime = 0;
+                            rightVideo.play();
+                        }
+
+                        const leftVideo = document.getElementById('video-left');
+                        if (leftVideo) {
+                            leftVideo.pause();
+                            leftVideo.currentTime = 0;
+                            leftVideo.play();
+                        }
+                "#).await.unwrap();
+            },
                 svg {
                     class: "icon",
                     view_box: "0 0 512 512",
@@ -146,7 +193,28 @@ fn VideoControls() -> Element {
                     path { d: "M0 224c0 17.7 14.3 32 32 32s32-14.3 32-32c0-53 43-96 96-96l160 0 0 32c0 12.9 7.8 24.6 19.8 29.6s25.7 2.2 34.9-6.9l64-64c12.5-12.5 12.5-32.8 0-45.3l-64-64c-9.2-9.2-22.9-11.9-34.9-6.9S320 19.1 320 32l0 32L160 64C71.6 64 0 135.6 0 224zm512 64c0-17.7-14.3-32-32-32s-32 14.3-32 32c0 53-43 96-96 96l-160 0 0-32c0-12.9-7.8-24.6-19.8-29.6s-25.7-2.2-34.9 6.9l-64 64c-12.5 12.5-12.5 32.8 0 45.3l64 64c9.2 9.2 22.9 11.9 34.9 6.9s19.8-16.6 19.8-29.6l0-32 160 0c88.4 0 160-71.6 160-160z" }
                 }
             }
-            button { class: "circle-button", onclick: |_| {},
+            // SPEED BUTTON
+            button { class: "circle-button", onclick: |_| async move {
+                document::eval(r#"
+                        const rightVideo = document.getElementById('video-right');
+                        if (rightVideo) {
+                            if (rightVideo.playbackRate === 1) {
+                                rightVideo.playbackRate = 1.5;
+                            } else {
+                                rightVideo.playbackRate = 1;
+                            }
+                        }
+
+                        const leftVideo = document.getElementById('video-left');
+                        if (leftVideo) {
+                            if (leftVideo.playbackRate === 1) {
+                                leftVideo.playbackRate = 1.5;
+                            } else {
+                                leftVideo.playbackRate = 1;
+                            }
+                        }
+                "#).await.unwrap();
+            },
                 svg {
                     class: "icon",
                     view_box: "0 0 512 512",
@@ -155,7 +223,20 @@ fn VideoControls() -> Element {
                     path { d: "M0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm320 96c0-26.9-16.5-49.9-40-59.3L280 88c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 204.7c-23.5 9.5-40 32.5-40 59.3c0 35.3 28.7 64 64 64s64-28.7 64-64zM144 176a32 32 0 1 0 0-64 32 32 0 1 0 0 64zm-16 80a32 32 0 1 0 -64 0 32 32 0 1 0 64 0zm288 32a32 32 0 1 0 0-64 32 32 0 1 0 0 64zM400 144a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z" }
                 }
             }
-            button { class: "circle-button", onclick: |_| {},
+            // AUDIO BUTTON
+            button { class: "circle-button", onclick: |_| async move {
+                    document::eval(r#"
+                        const rightVideo = document.getElementById('video-right');
+                        if (rightVideo) {
+                            rightVideo.muted = !rightVideo.muted;
+                        }
+
+                        const leftVideo = document.getElementById('video-left');
+                        if (leftVideo) {
+                            leftVideo.muted = !leftVideo.muted;
+                        }
+                    "#).await.unwrap();
+                },
                 svg {
                     class: "icon",
                     view_box: "0 0 576 512",
