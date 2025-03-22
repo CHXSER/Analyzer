@@ -4,12 +4,13 @@ use dioxus::prelude::*;
 use humansize::{format_size, DECIMAL};
 use urlencoding::encode;
 
-use crate::{model::media::DuplicateMedia, Route, DUPS};
+use crate::{model::media::DuplicateMedia, Route, DELETE_QUEUE, DUPS};
 
 #[component]
 pub fn Comparison() -> Element {
-    if DUPS.is_empty() {
-        use_navigator().push(Route::Home);
+    if DUPS().is_empty() {
+        use_navigator().push(Route::NoDups);
+        return rsx! {};
     }
 
     let mut current_index: Signal<usize> = use_signal(|| 0);
@@ -27,7 +28,9 @@ pub fn Comparison() -> Element {
                     if current_index() <= DUPS().len() {
                         current_index.set(current_index + 1);
                     } else {
-                        //TODO: Summary Page qui
+                        spawn(async move {
+                            use_navigator().push(Route::Summary);
+                        });
                     }
                 }, "NEXT" }
             }
@@ -41,7 +44,19 @@ pub fn Comparison() -> Element {
                 div { class: "media-box",
                     MediaDisplayLeft { media: DUPS()[current_index()].clone() }
                     div { id: "left-progress", class: "progress-video" }
-                    button { class: "delete-button", onclick: |_| {}, "DELETE" }
+                    button { class: "delete-button", onclick: move |_| {
+                        let media = DUPS()[current_index()].clone();
+                        match media {
+                            DuplicateMedia::PhotoMatchGroup(a) => {
+                                let image_path = a.images[0].path.clone();
+                                DELETE_QUEUE.write().0.push(image_path);
+                            }
+                            DuplicateMedia::VideoMatchGroup(a) => {
+                                let first_path = a.duplicates().next().unwrap();
+                                DELETE_QUEUE.write().0.push(first_path.to_path_buf());
+                            }
+                        }
+                    }, "DELETE" }
                 }
 
                 match &DUPS()[current_index()] {
@@ -57,7 +72,19 @@ pub fn Comparison() -> Element {
                 div { class: "media-box",
                     MediaDisplayRight { media: DUPS()[current_index()].clone() }
                     div { id: "right-progress", class: "progress-video" }
-                    button { class: "delete-button", onclick: |_| {}, "DELETE" }
+                    button { class: "delete-button", onclick: move |_| {
+                        let media = DUPS()[current_index()].clone();
+                        match media {
+                            DuplicateMedia::PhotoMatchGroup(a) => {
+                                let image_path = a.images[1].path.clone();
+                                DELETE_QUEUE.write().0.push(image_path);
+                            }
+                            DuplicateMedia::VideoMatchGroup(a) => {
+                                let first_path = a.duplicates().last().unwrap();
+                                DELETE_QUEUE.write().0.push(first_path.to_path_buf());
+                            }
+                        }
+                    }, "DELETE" }
                 }
             }
 

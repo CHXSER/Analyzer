@@ -1,3 +1,5 @@
+use std::path::PathBuf;
+
 use dioxus::prelude::*;
 
 mod component;
@@ -6,6 +8,8 @@ mod model;
 use component::comparison::Comparison;
 use component::home::Home;
 use component::loading::Loading;
+use component::nodups::NoDups;
+use component::summary::Summary;
 use model::media::DuplicateMedia;
 
 static LIGHT_MAIN_CSS: Asset = asset!("/assets/light_main.css");
@@ -14,6 +18,7 @@ static FAVICON: Asset = asset!("/assets/favicon.ico");
 
 static THEME: GlobalSignal<DarkTheme> = Global::new(|| DarkTheme(true));
 static DUPS: GlobalSignal<Vec<DuplicateMedia>> = Global::new(Vec::new);
+static DELETE_QUEUE: GlobalSignal<DeleteQueue> = Global::new(|| DeleteQueue(Vec::new()));
 
 fn main() {
     #[cfg(feature = "desktop")]
@@ -62,6 +67,15 @@ pub enum Route {
 
     #[route("/comparison")]
     Comparison,
+
+    #[route("/nodups")]
+    NoDups,
+
+    #[route("/summary")]
+    Summary,
 }
 
 struct DarkTheme(bool);
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct DeleteQueue(Vec<PathBuf>);
