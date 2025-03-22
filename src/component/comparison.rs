@@ -4,7 +4,7 @@ use dioxus::prelude::*;
 use humansize::{format_size, DECIMAL};
 use urlencoding::encode;
 
-use crate::{model::media::DuplicateMedia, Route, DELETE_QUEUE, DUPS};
+use crate::{model::media::DuplicateMedia, Route, DELETE_QUEUE, DUPS, IGNORE_QUEUE};
 
 #[component]
 pub fn Comparison() -> Element {
@@ -14,6 +14,11 @@ pub fn Comparison() -> Element {
     }
 
     let mut current_index: Signal<usize> = use_signal(|| 0);
+
+    if current_index() == DUPS().len() || current_index() > DUPS().len() {
+        use_navigator().push(Route::Summary);
+        return rsx! {};
+    }
 
     rsx! {
         div { id: "duplicate-container",
@@ -50,10 +55,12 @@ pub fn Comparison() -> Element {
                             DuplicateMedia::PhotoMatchGroup(a) => {
                                 let image_path = a.images[0].path.clone();
                                 DELETE_QUEUE.write().0.push(image_path);
+                                current_index.set(current_index + 1);
                             }
                             DuplicateMedia::VideoMatchGroup(a) => {
                                 let first_path = a.duplicates().next().unwrap();
                                 DELETE_QUEUE.write().0.push(first_path.to_path_buf());
+                                current_index.set(current_index + 1);
                             }
                         }
                     }, "DELETE" }
@@ -78,17 +85,22 @@ pub fn Comparison() -> Element {
                             DuplicateMedia::PhotoMatchGroup(a) => {
                                 let image_path = a.images[1].path.clone();
                                 DELETE_QUEUE.write().0.push(image_path);
+                                current_index.set(current_index + 1);
                             }
                             DuplicateMedia::VideoMatchGroup(a) => {
                                 let first_path = a.duplicates().last().unwrap();
                                 DELETE_QUEUE.write().0.push(first_path.to_path_buf());
+                                current_index.set(current_index + 1);
                             }
                         }
                     }, "DELETE" }
                 }
             }
 
-            button { class: "ignore-button", onclick: |_| {}, "IGNORE" }
+            button { class: "ignore-button", onclick: move |_| {
+                IGNORE_QUEUE.write().0.push(DUPS()[current_index()].clone());
+                current_index.set(current_index + 1);
+            }, "IGNORE" }
         }
     }
 }
@@ -107,15 +119,23 @@ fn MediaDisplayLeft(media: DuplicateMedia) -> Element {
                 }
                 DuplicateMedia::VideoMatchGroup(a) => {
                     let first_path = a.duplicates().next().unwrap();
+                    let is_gif = first_path.extension().unwrap() == "gif";
                     let encoded_path = encode(first_path.to_str().unwrap());
                     println!("A sinistra -> {:?}", first_path);
                     rsx! {
-                        video {
-                            id: "video-left",
-                            class: "media",
-                            src: "{encoded_path}",
-                            autoplay: true,
-                            controls: false,
+                        if is_gif {
+                            img {
+                                class: "media",
+                                src: "{encoded_path}",
+                            }
+                        } else {
+                            video {
+                                id: "video-left",
+                                class: "media",
+                                src: "{encoded_path}",
+                                autoplay: true,
+                                controls: false,
+                            }
                         }
                     }
                 }
@@ -138,14 +158,22 @@ fn MediaDisplayRight(media: DuplicateMedia) -> Element {
                 }
                 DuplicateMedia::VideoMatchGroup(a) => {
                     let last_path = a.duplicates().last().unwrap();
+                    let is_gif = last_path.extension().unwrap() == "gif";
                     let encoded_path = encode(last_path.to_str().unwrap());
                     rsx! {
-                        video {
-                            id: "video-right",
-                            class: "media",
-                            src: "{encoded_path}",
-                            autoplay: true,
-                            controls: false,
+                        if is_gif {
+                            img {
+                                class: "media",
+                                src: "{encoded_path}",
+                            }
+                        } else {
+                            video {
+                                id: "video-right",
+                                class: "media",
+                                src: "{encoded_path}",
+                                autoplay: true,
+                                controls: false,
+                            }
                         }
                     }
                 }

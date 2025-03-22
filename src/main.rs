@@ -19,6 +19,7 @@ static FAVICON: Asset = asset!("/assets/favicon.ico");
 static THEME: GlobalSignal<DarkTheme> = Global::new(|| DarkTheme(true));
 static DUPS: GlobalSignal<Vec<DuplicateMedia>> = Global::new(Vec::new);
 static DELETE_QUEUE: GlobalSignal<DeleteQueue> = Global::new(|| DeleteQueue(Vec::new()));
+static IGNORE_QUEUE: GlobalSignal<IgnoreDuplicate> = Global::new(|| IgnoreDuplicate(Vec::new()));
 
 fn main() {
     #[cfg(feature = "desktop")]
@@ -79,3 +80,6 @@ struct DarkTheme(bool);
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct DeleteQueue(Vec<PathBuf>);
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct IgnoreDuplicate(Vec<DuplicateMedia>);
