@@ -11,14 +11,24 @@ pub fn Comparison() -> Element {
 
     // TODO: cercare il modo per capire se si tratta di video o foto
     // vedendo l'elemento a current_index se è un PhotoMediaGroup o VideoMediaGroup
-    let current_index: Signal<usize> = use_signal(|| 0);
+    let mut current_index: Signal<usize> = use_signal(|| 0);
 
     rsx! {
         div { id: "duplicate-container",
             div { class: "nav-bar",
-                button { class: "nav-button prev", onclick: |_| println!("Ciao!"), "PREVIOUS" }
-                div { class: "counter", "1 of 10 duplicates" }
-                button { class: "nav-button next", onclick: |_| println!("Ciao!"), "NEXT" }
+                button { class: "nav-button prev", onclick: move |_| {
+                    if current_index() >= 1 {
+                        current_index.set(current_index - 1);
+                    }
+                }, "PREVIOUS" }
+                div { class: "counter", "{current_index() + 1} of {DUPS().len()} duplicates" }
+                button { class: "nav-button next", onclick: move |_| {
+                    if current_index() <= DUPS().len() {
+                        current_index.set(current_index + 1);
+                    } else {
+                        //TODO: Summary Page qui
+                    }
+                }, "NEXT" }
             }
 
             div { class: "file-info-container",
@@ -101,7 +111,6 @@ fn MediaDisplayRight(media: DuplicateMedia) -> Element {
                 DuplicateMedia::VideoMatchGroup(a) => {
                     let last_path = a.duplicates().last().unwrap();
                     let encoded_path = encode(last_path.to_str().unwrap());
-                    println!("A destra -> {:?}", last_path);
                     rsx! {
                         video {
                             id: "video-right",
