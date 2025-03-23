@@ -111,14 +111,14 @@ pub fn Loading(folder_path: String) -> Element {
     }
 
     rsx! {
-        div { class: "loading-container",
-            div { class: "loading-content",
+        div { id: "container",
+            div { id: "loading-content",
                 h2 { "Analyzing..." }
-                p { class: "folder-path", "{folder_path}" }
+                p { id: "folder-path", "{folder_path}" }
 
                 if loading() {
                     div { class: "progress-bar-container",
-                        div { class: "progress-bar" }
+                        div { id: "progress-bar" }
                     }
                     p { "Processing files..." }
                 } else {
