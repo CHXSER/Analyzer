@@ -1,6 +1,6 @@
-/* ==========================
+/* ===============================
    🌞 THEMING (Latte & Frappe)
-========================== */
+=============================== */
 :root {
     --base: #eff1f5;
     --mantle: #e6e9ef;
@@ -55,13 +55,15 @@ html, body {
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-a {
-    color: var(--accent);
-    text-decoration: none;
+h1 {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    user-select: none;
+    animation: fadeIn 1s ease-in-out;
 }
 
-a:hover {
-    text-decoration: underline;
+button:focus, a:focus, input:focus, select:focus {
+    outline: none;
 }
 
 /* ==========================
@@ -78,13 +80,6 @@ a:hover {
     overflow: hidden;
 }
 
-h1 {
-    font-size: 3rem;
-    margin-bottom: 20px;
-    user-select: none;
-    animation: fadeIn 1s ease-in-out;
-}
-
 #settings-button {
     position: absolute;
     top: 20px;
@@ -95,6 +90,14 @@ h1 {
     cursor: pointer;
     transition: transform 0.2s;
     color: var(--text);
+}
+
+#settings-button svg {
+    color: var(--text);
+    align-items: center;
+    justify-content: center;
+    width: 27px;
+    height: 27px;
 }
 
 #settings-button:hover {
@@ -109,12 +112,13 @@ h1 {
 
 #file-picker {
     background-color: var(--accent);
-    color: white;
+    color: var(--text);
     padding: 10px 20px;
     border: none;
-    border-radius: 5px;
+    border-radius: 15px;
     cursor: pointer;
     font-size: 1rem;
+    font-weight: bold;
     transition: background-color 0.3s, transform 0.2s;
 }
 
