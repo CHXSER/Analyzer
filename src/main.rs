@@ -19,7 +19,7 @@ const SETTINGS_FILE: &str = "settings.json";
 static MAIN_CSS: Asset = asset!("/assets/main.css");
 static FAVICON: Asset = asset!("/assets/favicon.ico");
 
-static SETTINGS: GlobalSignal<AppSettings> = Global::new(|| load_settings());
+static SETTINGS: GlobalSignal<AppSettings> = Global::new(load_settings);
 static DUPS: GlobalSignal<Vec<DuplicateMedia>> = Global::new(Vec::new);
 static DELETE_QUEUE: GlobalSignal<DeleteQueue> = Global::new(|| DeleteQueue(Vec::new()));
 static IGNORE_QUEUE: GlobalSignal<IgnoreDuplicate> = Global::new(|| IgnoreDuplicate(Vec::new()));
