@@ -327,8 +327,8 @@ fn FileInfoLeft(file: DuplicateMedia) -> Element {
                         let real_size = format_size(file_size, DECIMAL);
                         rsx! {
                             div { class: "file-info-internal-left",
-                                span { class: "filename", "Name: {file_name}" }
-                                span { "Size: {real_size}" }
+                                span { class: "filename", "{file_name}" }
+                                b { "{real_size}" }
                             }
                         }
                     }
@@ -339,8 +339,8 @@ fn FileInfoLeft(file: DuplicateMedia) -> Element {
                         let real_size = format_size(file_size, DECIMAL);
                         rsx! {
                             div { class: "file-info-internal-left",
-                                span { class: "filename", "Name: {file_name}" }
-                                span { "Size: {real_size}" }
+                                span { class: "filename", "{file_name}" }
+                                b { "{real_size}" }
                             }
                         }
                     }
@@ -364,8 +364,8 @@ fn FileInfoRight(file: DuplicateMedia) -> Element {
                         let real_size = format_size(file_size, DECIMAL);
                         rsx! {
                             div { class: "file-info-internal-right",
-                                span { class: "filename", "Name: {file_name}" }
-                                span { "Size: {real_size}" }
+                                span { class: "filename", "{file_name}" }
+                                b { "{real_size}" }
                             }
                         }
                     }
@@ -376,8 +376,8 @@ fn FileInfoRight(file: DuplicateMedia) -> Element {
                         let real_size = format_size(file_size, DECIMAL);
                         rsx! {
                             div { class: "file-info-internal-right",
-                                span { class: "filename", "Name: {file_name}" }
-                                span { "Size: {real_size}" }
+                                span { class: "filename", "{file_name}" }
+                                b { "{real_size}" }
                             }
                         }
                     }
