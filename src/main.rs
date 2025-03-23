@@ -19,7 +19,7 @@ const SETTINGS_FILE: &str = "settings.json";
 static MAIN_CSS: Asset = asset!("/assets/main.css");
 static FAVICON: Asset = asset!("/assets/favicon.ico");
 
-static SETTINGS: GlobalSignal<AppSettings> = Global::new(AppSettings::default);
+static SETTINGS: GlobalSignal<AppSettings> = Global::new(|| load_settings());
 static DUPS: GlobalSignal<Vec<DuplicateMedia>> = Global::new(Vec::new);
 static DELETE_QUEUE: GlobalSignal<DeleteQueue> = Global::new(|| DeleteQueue(Vec::new()));
 static IGNORE_QUEUE: GlobalSignal<IgnoreDuplicate> = Global::new(|| IgnoreDuplicate(Vec::new()));
@@ -51,8 +51,6 @@ fn main() {
 #[component]
 fn App() -> Element {
     use_effect(move || {
-        load_settings();
-
         let theme_js = match SETTINGS().theme() {
             Theme::Light => r#"document.documentElement.setAttribute('data-theme', 'latte');"#,
             Theme::Dark => r#"document.documentElement.setAttribute('data-theme', 'frappe');"#,
@@ -115,10 +113,4 @@ fn load_settings() -> AppSettings {
     }
 
     AppSettings::default()
-}
-
-fn save_settings(settings: &AppSettings) {
-    if let Ok(json) = serde_json::to_string_pretty(settings) {
-        let _ = std::fs::write(SETTINGS_FILE, json);
-    }
 }

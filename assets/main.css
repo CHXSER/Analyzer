@@ -451,3 +451,134 @@ h2 {
     gap: 15px;
     justify-content: center;
 }
+
+/* ==========================
+   😵‍💫 SETTINGS
+========================== */
+.settings-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100vw;
+    background-color: var(--base);
+    color: var(--text);
+    font-family: "Inter", sans-serif;
+}
+
+.settings-card {
+    background-color: var(--mantle);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.settings-title {
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: bold;
+    letter-spacing: var(--letter-spacing);
+    color: var(--text);
+    margin-bottom: 10px;
+}
+
+/* Generic setting row */
+.setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--overlay);
+}
+
+/* Last item should have no border */
+.setting-item:last-child {
+    border-bottom: none;
+}
+
+/* Select dropdown */
+select {
+    background-color: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--overlay);
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+/* Slider (for tolerance settings) */
+input[type="range"] {
+    width: 100%;
+    accent-color: var(--accent);
+}
+
+/* Toggle switch */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 20px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--overlay);
+    border-radius: 20px;
+    transition: 0.3s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 14px;
+    width: 14px;
+    left: 3px;
+    bottom: 3px;
+    background-color: var(--text);
+    transition: 0.3s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: var(--accent);
+}
+
+input:checked + .slider:before {
+    transform: translateX(20px);
+}
+
+/* Save Button */
+.save-button {
+    background-color: var(--accent);
+    color: var(--crust);
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: 0.3s;
+    text-align: center;
+}
+
+.save-button:hover {
+    background-color: var(--text);
+    color: var(--base);
+}
