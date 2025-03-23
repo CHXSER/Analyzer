@@ -2841,6 +2841,8 @@ dependencies = [
  "image_hasher",
  "rayon",
  "rfd 0.15.3",
+ "serde",
+ "serde_json",
  "tokio",
  "urlencoding",
  "vid_dup_finder_lib",

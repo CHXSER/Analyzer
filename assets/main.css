@@ -2,17 +2,17 @@
    🌞 THEMING (Latte & Frappe)
 ========================== */
 :root {
-    --base: #303446;
-    --mantle: #292c3c;
-    --crust: #232634;
-    --text: #c6d0f5;
-    --subtext: #a5adce;
-    --surface: #414559;
-    --overlay: #51576d;
+    --base: #eff1f5;
+    --mantle: #e6e9ef;
+    --crust: #dce0e8;
+    --text: #4c4f69;
+    --subtext: #5c5f77;
+    --surface: #ccd0da;
+    --overlay: #bcc0cc;
+    --accent: #8caaee;
+    --letter-spacing: 0.2em; 
     --delete: #e78284;
     --ignore: #e5c890;
-    --accent: #8caaee;
-    --letter-spacing: 0.2em;
 }
 
 [data-theme="frappe"] {

@@ -1,5 +1,6 @@
 use std::path::PathBuf;
 
+use component::settings::{Accent, AppSettings, Theme};
 use dioxus::prelude::*;
 
 mod component;
@@ -9,14 +10,16 @@ use component::comparison::Comparison;
 use component::home::Home;
 use component::loading::Loading;
 use component::nodups::NoDups;
+use component::settings::Settings;
 use component::summary::Summary;
 use model::media::DuplicateMedia;
 
-static LIGHT_MAIN_CSS: Asset = asset!("/assets/light_main.css");
-static DARK_MAIN_CSS: Asset = asset!("/assets/dark_main.css");
+const SETTINGS_FILE: &str = "settings.json";
+
+static MAIN_CSS: Asset = asset!("/assets/main.css");
 static FAVICON: Asset = asset!("/assets/favicon.ico");
 
-static THEME: GlobalSignal<DarkTheme> = Global::new(|| DarkTheme(true));
+static SETTINGS: GlobalSignal<AppSettings> = Global::new(AppSettings::default);
 static DUPS: GlobalSignal<Vec<DuplicateMedia>> = Global::new(Vec::new);
 static DELETE_QUEUE: GlobalSignal<DeleteQueue> = Global::new(|| DeleteQueue(Vec::new()));
 static IGNORE_QUEUE: GlobalSignal<IgnoreDuplicate> = Global::new(|| IgnoreDuplicate(Vec::new()));
@@ -47,13 +50,33 @@ fn main() {
 
 #[component]
 fn App() -> Element {
+    use_effect(move || {
+        load_settings();
+
+        let theme_js = match SETTINGS().theme() {
+            Theme::Light => r#"document.documentElement.setAttribute('data-theme', 'latte');"#,
+            Theme::Dark => r#"document.documentElement.setAttribute('data-theme', 'frappe');"#,
+        };
+
+        let accent_js: &str = match SETTINGS().accent() {
+            Accent::Blue => r#"document.documentElement.setAttribute('data-accent','blue');"#,
+            Accent::Green => r#"document.documentElement.setAttribute('data-accent','green');"#,
+            Accent::Red => r#"document.documentElement.setAttribute('data-accent','red');"#,
+            Accent::Yellow => r#"document.documentElement.setAttribute('data-accent','yellow');"#,
+            Accent::Pink => r#"document.documentElement.setAttribute('data-accent','pink');"#,
+            Accent::Peach => r#"document.documentElement.setAttribute('data-accent','peach');"#,
+            Accent::Mauve => r#"document.documentElement.setAttribute('data-accent','mauve');"#,
+        };
+
+        spawn(async move {
+            document::eval(theme_js).await.unwrap();
+            document::eval(accent_js).await.unwrap();
+        });
+    });
+
     rsx! {
         document::Link { rel: "icon", href: FAVICON }
-        if THEME.read().0 {
-            document::Stylesheet { href: DARK_MAIN_CSS }
-        } else {
-            document::Stylesheet { href: LIGHT_MAIN_CSS }
-        }
+        document::Stylesheet { href: MAIN_CSS }
         Router::<Route> {}
     }
 }
@@ -74,12 +97,28 @@ pub enum Route {
 
     #[route("/summary")]
     Summary,
-}
 
-struct DarkTheme(bool);
+    #[route("/settings")]
+    Settings,
+}
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct DeleteQueue(Vec<PathBuf>);
-
 #[derive(Debug, Clone, PartialEq)]
 pub struct IgnoreDuplicate(Vec<DuplicateMedia>);
+
+fn load_settings() -> AppSettings {
+    if let Ok(contents) = std::fs::read_to_string(SETTINGS_FILE) {
+        if let Ok(settings) = serde_json::from_str::<AppSettings>(&contents) {
+            return settings;
+        }
+    }
+
+    AppSettings::default()
+}
+
+fn save_settings(settings: &AppSettings) {
+    if let Ok(json) = serde_json::to_string_pretty(settings) {
+        let _ = std::fs::write(SETTINGS_FILE, json);
+    }
+}
