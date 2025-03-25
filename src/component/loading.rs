@@ -16,13 +16,13 @@ use crate::{
 #[component]
 pub fn Loading(folder_path: String) -> Element {
     let mut loading = use_signal(|| true);
-
+    let image_tol = SETTINGS().image_tolerance();
+    let video_tol = SETTINGS().video_tolerance();
     let folder_path_clone = folder_path.clone();
     if loading() && DUPS.is_empty() {
         spawn({
             async move {
                 let (tx, rx) = oneshot::channel();
-
                 tokio::spawn(async move {
                     let media_files: Vec<Media> = tokio::task::spawn_blocking(move || {
                         let files: Vec<PathBuf> = std::fs::read_dir(&folder_path_clone)
@@ -50,12 +50,10 @@ pub fn Loading(folder_path: String) -> Element {
                                 let media =
                                     if let Some(ext) = path.extension().and_then(|e| e.to_str()) {
                                         match ext {
-                                            "jpg" | "jpeg" | "png" => {
+                                            "jpg" | "jpeg" | "png" | "gif" => {
                                                 Photo::new(&path).map(Media::Photo)
                                             }
-                                            "mp4" | "gif" | "webm" => {
-                                                Video::new(&path).map(Media::Video)
-                                            }
+                                            "mp4" | "webm" => Video::new(&path).map(Media::Video),
                                             _ => None,
                                         }
                                     } else {
@@ -83,11 +81,10 @@ pub fn Loading(folder_path: String) -> Element {
                     }
 
                     let photo_duplicates: Vec<photo::PhotoMatchGroup> =
-                        find_similar_images(&photos, SETTINGS().image_tolerance());
+                        find_similar_images(&photos, image_tol);
                     let video_hashes: Vec<VideoHash> =
                         videos.iter().map(|vid| vid.hash.clone()).collect();
-                    let video_duplicates: Vec<MatchGroup> =
-                        search(video_hashes, SETTINGS().video_tolerance());
+                    let video_duplicates: Vec<MatchGroup> = search(video_hashes, video_tol);
 
                     let mut dups: Vec<DuplicateMedia> = Vec::new();
 
