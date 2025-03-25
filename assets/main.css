@@ -237,6 +237,7 @@ button:focus, a:focus, input:focus, select:focus {
 .file-info-container {
     display: flex;
     justify-content: space-between;
+    gap: 20px;
     width: 100%;
     margin-bottom: 10px;
 }
@@ -264,9 +265,11 @@ button:focus, a:focus, input:focus, select:focus {
 }
 
 .filename {
+    max-width: 100%;
     word-wrap: break-word;
-    overflow-wrap: break-word;
-    user-select: auto;
+    overflow-wrap: anywhere;
+    user-select: text;
+    white-space: normal;
 }
 
 
