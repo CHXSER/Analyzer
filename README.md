@@ -25,13 +25,13 @@ immagini/video e un'interfaccia personalizzabile.
 paru -S analyzer
 ```
 ### Windows
-Installa l'ultima versione dell'applicazione [qui]()
+Installa l'ultima versione dell'applicazione [qui](0.1)
 ## 🔧 Build e contribuire
 
 ### 1️⃣ **Clonare il repository**
 ```bash
-    git clone https://github.com/CHXSER/analyzer.git
-    cd analyzer
+git clone https://github.com/CHXSER/analyzer.git
+cd analyzer
 ```
 ### 2️⃣ **Installare dipendenze**
 Analyzer utilizza Rust, di conseguenza hai bisogno di avere rust installato per la tua piattaforma. Avrai anche bisogno di installare gli strumenti di Dioxus che trovi [qui](https://dioxuslabs.com/learn/0.6/getting_started/#)
