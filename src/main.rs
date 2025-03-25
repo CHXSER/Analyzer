@@ -1,3 +1,4 @@
+#![windows_subsystem = "windows"]
 use std::path::PathBuf;
 
 use component::settings::{Accent, AppSettings, Theme};
