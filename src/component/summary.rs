@@ -1,15 +1,27 @@
 use dioxus::prelude::*;
+use humansize::{format_size, DECIMAL};
 
 use crate::{Route, DELETE_QUEUE, DUPS};
 
 #[component]
 pub fn Summary() -> Element {
+    let mut delete_size: Signal<u64> = use_signal(|| 0);
+    use_effect(move || {
+        let mut size: u64 = 0;
+        for file in DELETE_QUEUE().0 {
+            let metadata = std::fs::metadata(&file).unwrap();
+            size += metadata.len();
+        }
+
+        delete_size.set(size);
+    });
+
     rsx! {
         div { id: "container",
             h1 { "Summary" }
             p { "Confirm changes or go back" }
             div { id: "content",
-                DeleteFiles {}
+                DeleteFiles { size: delete_size() }
                 IgnorePairs {}
                 Buttons {}
             }
@@ -18,13 +30,12 @@ pub fn Summary() -> Element {
 }
 
 #[component]
-fn DeleteFiles() -> Element {
+fn DeleteFiles(size: u64) -> Element {
+    let real_size = format_size(size, DECIMAL);
     rsx! {
         div { class: "delete-container",
-            p { "Files to delete: " }
-            for path in DELETE_QUEUE().0 {
-                p { "{path.to_str().unwrap()}" }
-            }
+            p { "Number of files to delete: {DELETE_QUEUE().0.len()}" }
+            p { id: "delete-file-size", "{real_size} will be deleted" }
         }
     }
 }

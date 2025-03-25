@@ -357,13 +357,6 @@ button:focus, a:focus, input:focus, select:focus {
     background-color: var(--overlay);
 }
 
-/* @media (max-width: 900px) {
-    .media-box {
-        width: 100%;
-        max-width: 80%;
-    }
-} */
-
 .media-container {
     position: relative;
     display: flex;
@@ -409,20 +402,6 @@ button:focus, a:focus, input:focus, select:focus {
     height: 27px;
 }
 
-.progress-video {
-    margin-top: 10px;
-    width: 100%;
-    font-size: 12px;
-    display: flex;
-    height: auto;
-    align-items: center;
-    justify-items: center;
-}
-
-.progress-bar-video {
-    width: 80%;
-}
-
 /* ==========================
    🎖️ SUMMARY
 ========================== */
@@ -438,6 +417,10 @@ button:focus, a:focus, input:focus, select:focus {
     white-space: pre-wrap;
     text-align: left;
     padding: 5px 0;
+}
+
+#delete-file-size {
+    text-align: center;
 }
 
 .ignore-container {
