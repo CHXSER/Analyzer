@@ -5,6 +5,7 @@ use crate::{Route, DELETE_QUEUE, DUPS};
 
 #[component]
 pub fn Summary() -> Element {
+    println!("{:?}", DELETE_QUEUE());
     let mut delete_size: Signal<u64> = use_signal(|| 0);
     use_effect(move || {
         let mut size: u64 = 0;
@@ -58,7 +59,6 @@ fn Buttons() -> Element {
                         std::fs::remove_file(path).unwrap();
                     }
                     DUPS.write().clear();
-                    DELETE_QUEUE().0.clear();
                     use_navigator().push(Route::Home);
                 },
                 "CONFIRM"
