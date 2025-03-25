@@ -1,17 +1,36 @@
-# Development
+# 🖼️ Analyzer
 
-Your new bare-bones project includes minimal organization with a single `main.rs` file and a few assets.
+Analyzer è un applicazione per l'analisi e la gestione di file multimediali, con funzioni avanzate di confronto
+immaggini/video e un'interfaccia personalizzabile.
 
-### Serving Your App
+## 🚀 Funzionalità principali
+- 🔍 **Analisi di similarità** per immagini e video
+- 🎛️ **Impostazioni personalizzabili** con selettori di tema e colori
+- 📁 **Gestione file** con opzione di eliminazione rapida
+- 📜 **Interfaccia scorrevole** con miglioramenti alla UI/UX
+- 💻 **Multipiattaforma** tra Windows/Linux
 
-Run the following command in the root of your project to start developing with the default platform:
+---
 
+## 📸 Screenshot
+![Mainpage screenshot Dark](assets/screen_1.png)
+![Mainpage screenshot Ligh](assets/screen_2.png)
+![Comparisonpage screenshot](assets/screen_3.png)
+
+---
+
+## 🔧 Installazione e uso (contribuire)
+
+### 1️⃣ **Clonare il repository**
 ```bash
-dx serve
+    git clone https://github.com/CHXSER/analyzer.git
+    cd analyzer
 ```
+### 2️⃣ **Installare dipendenze**
+Analyzer utilizza Rust, di conseguenza hai bisogno di avere rust installato per la tua piattaforma. Avrai anche bisogno di installare gli strumenti di Dioxus che trovi [qui](https://dioxuslabs.com/learn/0.6/getting_started/#)
 
-To run for a different platform, use the `--platform platform` flag. E.g.
+Su Linux avrai bisogno di installare le seguenti:
 ```bash
-dx serve --platform desktop
-```
+    pacman -S 
+`` 
 
