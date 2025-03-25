@@ -1,11 +1,10 @@
 use dioxus::prelude::*;
 use humansize::{format_size, DECIMAL};
 
-use crate::{Route, DELETE_QUEUE, DUPS};
+use crate::{DeleteQueue, Route, DELETE_QUEUE, DUPS};
 
 #[component]
 pub fn Summary() -> Element {
-    println!("{:?}", DELETE_QUEUE());
     let mut delete_size: Signal<u64> = use_signal(|| 0);
     use_effect(move || {
         let mut size: u64 = 0;
@@ -58,7 +57,8 @@ fn Buttons() -> Element {
                     for path in DELETE_QUEUE().0 {
                         std::fs::remove_file(path).unwrap();
                     }
-                    DUPS.write().clear();
+                    *DUPS.write() = vec![];
+                    *DELETE_QUEUE.write() = DeleteQueue(vec![]);
                     use_navigator().push(Route::Home);
                 },
                 "CONFIRM"
@@ -66,8 +66,8 @@ fn Buttons() -> Element {
             button {
                 id: "file-picker",
                 onclick: move |_| {
-                    DUPS.write().clear();
-                    DELETE_QUEUE().0.clear();
+                    *DUPS.write() = vec![];
+                    *DELETE_QUEUE.write() = DeleteQueue(vec![]);
                     use_navigator().push(Route::Home);
                 },
                 "CANCEL"
