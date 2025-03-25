@@ -1,9 +1,13 @@
 [application]
 
+[bundle]
+identifier = "mp.chxser.analyzer"
+publisher = "CHXSER"
+
 [web.app]
 
 # HTML title tag content
-title = "kobo"
+title = "analyzer"
 
 # include `assets` in web platform
 [web.resource]
