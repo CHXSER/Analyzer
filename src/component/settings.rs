@@ -66,6 +66,20 @@ pub fn Settings() -> Element {
                 }
 
                 div { class: "settings-item",
+                    label { "Mute video" }
+                    label { class: "switch",
+                        input {
+                            r#type: "checkbox",
+                            checked: "{SETTINGS().mute_video()}",
+                            onchange: move |e| {
+                                SETTINGS.write().set_mute_video(e.data.value().parse().unwrap());
+                            },
+                        }
+                        span { class: "slider" }
+                    }
+                }
+
+                div { class: "settings-item",
                     label { "Theme" }
                     select {
                         value: "{SETTINGS().theme().to_str()}",

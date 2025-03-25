@@ -119,22 +119,15 @@ fn MediaDisplayLeft(media: DuplicateMedia) -> Element {
                 }
                 DuplicateMedia::VideoMatchGroup(a) => {
                     let first_path = a.duplicates().next().unwrap();
-                    let is_gif = first_path.extension().unwrap() == "gif";
                     let encoded_path = encode(first_path.to_str().unwrap());
                     rsx! {
-                        if is_gif {
-                            img {
-                                class: "media",
-                                src: "{encoded_path}",
-                            }
-                        } else {
-                            video {
-                                id: "video-left",
-                                class: "media",
-                                src: "{encoded_path}",
-                                autoplay: SETTINGS().autoplay_video(),
-                                controls: false,
-                            }
+                        video {
+                            id: "video-left",
+                            class: "media",
+                            src: "{encoded_path}",
+                            autoplay: SETTINGS().autoplay_video(),
+                            controls: false,
+                            muted: SETTINGS().mute_video(),
                         }
                     }
                 }
@@ -157,22 +150,15 @@ fn MediaDisplayRight(media: DuplicateMedia) -> Element {
                 }
                 DuplicateMedia::VideoMatchGroup(a) => {
                     let last_path = a.duplicates().last().unwrap();
-                    let is_gif = last_path.extension().unwrap() == "gif";
                     let encoded_path = encode(last_path.to_str().unwrap());
                     rsx! {
-                        if is_gif {
-                            img {
-                                class: "media",
-                                src: "{encoded_path}",
-                            }
-                        } else {
-                            video {
-                                id: "video-right",
-                                class: "media",
-                                src: "{encoded_path}",
-                                autoplay: SETTINGS().autoplay_video(),
-                                controls: false
-                            }
+                        video {
+                            id: "video-right",
+                            class: "media",
+                            src: "{encoded_path}",
+                            autoplay: SETTINGS().autoplay_video(),
+                            controls: false,
+                            muted: SETTINGS().mute_video(),
                         }
                     }
                 }
