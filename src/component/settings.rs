@@ -1,4 +1,4 @@
-use crate::{SETTINGS, SETTINGS_FILE};
+use crate::{Route, SETTINGS, SETTINGS_FILE};
 use dioxus::prelude::*;
 use serde::{Deserialize, Serialize};
 
@@ -11,6 +11,7 @@ pub fn Settings() -> Element {
 
                 div { class: "setting-item",
                     label { "Image similarity tolerance" }
+                    p { "(Higher = more false positives)" }
                     input {
                         r#type: "range",
                         min: "5",
@@ -24,6 +25,7 @@ pub fn Settings() -> Element {
 
                 div { class: "settings-item",
                     label { "Video similarity tolerance" }
+                    p { "(Higher = more false positives)" }
                     input {
                         r#type: "range",
                         min: "0.30",
@@ -51,12 +53,15 @@ pub fn Settings() -> Element {
                 }
                 div { class: "settings-item",
                     label { "Autoplay video" }
-                    input {
-                        r#type: "checkbox",
-                        checked: "{SETTINGS().autoplay_video()}",
-                        onchange: move |e| {
-                            SETTINGS.write().set_autoplay_video(e.data.value().parse().unwrap());
-                        },
+                    label { class: "switch",
+                        input {
+                            r#type: "checkbox",
+                            checked: "{SETTINGS().autoplay_video()}",
+                            onchange: move |e| {
+                                SETTINGS.write().set_autoplay_video(e.data.value().parse().unwrap());
+                            },
+                        }
+                        span { class: "slider" }
                     }
                 }
 
@@ -98,11 +103,11 @@ pub fn Settings() -> Element {
                         option { value: "Italiano", "Italiano" }
                     }
                 }
-
                 button {
                     class: "save-button",
                     onclick: move |_| {
                         SETTINGS().save_settings();
+                        use_navigator().push(Route::Home);
                     },
                     "SAVE"
                 }
