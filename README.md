@@ -25,7 +25,7 @@ immagini/video e un'interfaccia personalizzabile.
 paru -S analyzer
 ```
 ### Windows
-Installa l'ultima versione dell'applicazione [qui](https://github.com/CHXSER/Analyzer/releases/download/0.1/analyzer-setup.exe)
+Installa l'ultima versione dell'applicazione [qui](https://github.com/CHXSER/Analyzer/releases/tag/0.1)
 ## 🔧 Build e contribuire
 
 ### 1️⃣ **Clonare il repository**
