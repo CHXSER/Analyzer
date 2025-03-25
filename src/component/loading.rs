@@ -10,7 +10,7 @@ use crate::{
         photo::{self, find_similar_images, Photo},
         video::Video,
     },
-    Route, DUPS,
+    Route, DUPS, SETTINGS,
 };
 
 #[component]
@@ -83,10 +83,11 @@ pub fn Loading(folder_path: String) -> Element {
                     }
 
                     let photo_duplicates: Vec<photo::PhotoMatchGroup> =
-                        find_similar_images(&photos, 5);
+                        find_similar_images(&photos, SETTINGS().image_tolerance());
                     let video_hashes: Vec<VideoHash> =
                         videos.iter().map(|vid| vid.hash.clone()).collect();
-                    let video_duplicates: Vec<MatchGroup> = search(video_hashes, 0.35);
+                    let video_duplicates: Vec<MatchGroup> =
+                        search(video_hashes, SETTINGS().video_tolerance());
 
                     let mut dups: Vec<DuplicateMedia> = Vec::new();
 

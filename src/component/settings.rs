@@ -119,7 +119,6 @@ pub fn Settings() -> Element {
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct AppSettings {
     image_tolerance: u32,
-    video_duration: f64,
     video_tolerance: f64,
     mute_video: bool,
     playback_speed: f32,
@@ -133,7 +132,6 @@ impl Default for AppSettings {
     fn default() -> Self {
         AppSettings {
             image_tolerance: 10,
-            video_duration: 2.0,
             video_tolerance: 0.35,
             mute_video: false,
             playback_speed: 1.0,
@@ -153,14 +151,6 @@ impl AppSettings {
 
     pub fn set_image_tolerance(&mut self, tol: u32) {
         self.image_tolerance = tol;
-    }
-
-    pub fn video_duration(&self) -> f64 {
-        self.video_duration
-    }
-
-    pub fn set_video_duration(&mut self, duration: f64) {
-        self.video_duration = duration;
     }
 
     pub fn video_tolerance(&self) -> f64 {

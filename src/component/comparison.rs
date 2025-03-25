@@ -4,7 +4,7 @@ use dioxus::prelude::*;
 use humansize::{format_size, DECIMAL};
 use urlencoding::encode;
 
-use crate::{model::media::DuplicateMedia, Route, DELETE_QUEUE, DUPS, IGNORE_QUEUE};
+use crate::{model::media::DuplicateMedia, Route, DELETE_QUEUE, DUPS, IGNORE_QUEUE, SETTINGS};
 
 #[component]
 pub fn Comparison() -> Element {
@@ -132,7 +132,7 @@ fn MediaDisplayLeft(media: DuplicateMedia) -> Element {
                                 id: "video-left",
                                 class: "media",
                                 src: "{encoded_path}",
-                                autoplay: true,
+                                autoplay: SETTINGS().autoplay_video(),
                                 controls: false,
                             }
                         }
@@ -170,8 +170,8 @@ fn MediaDisplayRight(media: DuplicateMedia) -> Element {
                                 id: "video-right",
                                 class: "media",
                                 src: "{encoded_path}",
-                                autoplay: true,
-                                controls: false,
+                                autoplay: SETTINGS().autoplay_video(),
+                                controls: false
                             }
                         }
                     }

@@ -588,6 +588,7 @@ input:checked + .slider:before {
     padding: 10px 15px;
     border-radius: 8px;
     font-size: 1rem;
+    font-weight: bold;
     cursor: pointer;
     transition: 0.3s;
     text-align: center;
