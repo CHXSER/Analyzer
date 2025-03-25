@@ -49,6 +49,24 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4aa90d7ce82d4be67b64039a3d588d38dbcc6736577de4a847025ce5b0c468d1"
 
 [[package]]
+name = "analyzer"
+version = "0.9.0"
+dependencies = [
+ "dioxus",
+ "directories",
+ "humansize",
+ "image",
+ "image_hasher",
+ "rayon",
+ "rfd 0.15.3",
+ "serde",
+ "serde_json",
+ "tokio",
+ "urlencoding",
+ "vid_dup_finder_lib",
+]
+
+[[package]]
 name = "anyhow"
 version = "1.0.97"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2828,24 +2846,6 @@ dependencies = [
  "bitflags 2.9.0",
  "serde",
  "unicode-segmentation",
-]
-
-[[package]]
-name = "kobo"
-version = "0.1.0"
-dependencies = [
- "dioxus",
- "directories",
- "humansize",
- "image",
- "image_hasher",
- "rayon",
- "rfd 0.15.3",
- "serde",
- "serde_json",
- "tokio",
- "urlencoding",
- "vid_dup_finder_lib",
 ]
 
 [[package]]

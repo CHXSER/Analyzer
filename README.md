@@ -22,7 +22,7 @@ immagini/video e un'interfaccia personalizzabile.
 ## Download e utilizzo
 ### Linux
 ```bash
-    paru -S analyzer
+paru -S analyzer
 ```
 ### Windows
 Installa l'ultima versione dell'applicazione [qui]()
@@ -37,15 +37,15 @@ Installa l'ultima versione dell'applicazione [qui]()
 Analyzer utilizza Rust, di conseguenza hai bisogno di avere rust installato per la tua piattaforma. Avrai anche bisogno di installare gli strumenti di Dioxus che trovi [qui](https://dioxuslabs.com/learn/0.6/getting_started/#)
 #### Effettua build del programma
 ```bash
-    dx serve
+dx serve
 ```
 o
 ```bash
-    dx serve --release
+dx serve --release
 ```
 
 Su Linux avrai bisogno di installare le seguenti:
 ```bash
-    pacman -S 
+pacman -S 
 ```
 
