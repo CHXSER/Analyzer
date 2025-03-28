@@ -132,6 +132,26 @@ button:focus, a:focus, input:focus, select:focus {
     transform: scale(1.05);
 }
 
+.file-input-hidden {
+    display: none;
+}
+  
+
+.file-input-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: var(--accent);
+    color: var(--text);
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+  
+.file-input-button:hover {
+    background-color: var(--overlay);
+    transform: scale(1.05);
+}
+
 /* ==========================
    🔄 LOADING SCREEN
 ========================== */
