@@ -1,5 +1,3 @@
-use std::os::windows::fs::MetadataExt;
-
 use dioxus::prelude::*;
 use humansize::{format_size, DECIMAL};
 use urlencoding::encode;
@@ -309,7 +307,7 @@ fn FileInfoLeft(file: DuplicateMedia) -> Element {
                     DuplicateMedia::PhotoMatchGroup(a) => {
                         let image_path = a.images[0].path.clone();
                         let file_name = image_path.file_name().unwrap().to_str().unwrap();
-                        let file_size = std::fs::metadata(&image_path).unwrap().file_size();
+                        let file_size = std::fs::metadata(&image_path).unwrap().len();
                         let real_size = format_size(file_size, DECIMAL);
                         rsx! {
                             div { class: "file-info-internal-left",
@@ -321,7 +319,7 @@ fn FileInfoLeft(file: DuplicateMedia) -> Element {
                     DuplicateMedia::VideoMatchGroup(a) => {
                         let first_path = a.duplicates().next().unwrap();
                         let file_name = first_path.file_name().unwrap().to_str().unwrap();
-                        let file_size = std::fs::metadata(first_path).unwrap().file_size();
+                        let file_size = std::fs::metadata(first_path).unwrap().len();
                         let real_size = format_size(file_size, DECIMAL);
                         rsx! {
                             div { class: "file-info-internal-left",
@@ -346,7 +344,7 @@ fn FileInfoRight(file: DuplicateMedia) -> Element {
                     DuplicateMedia::PhotoMatchGroup(a) => {
                         let image_path = a.images[1].path.clone();
                         let file_name = image_path.file_name().unwrap().to_str().unwrap();
-                        let file_size = std::fs::metadata(&image_path).unwrap().file_size();
+                        let file_size = std::fs::metadata(&image_path).unwrap().len();
                         let real_size = format_size(file_size, DECIMAL);
                         rsx! {
                             div { class: "file-info-internal-right",
@@ -358,7 +356,7 @@ fn FileInfoRight(file: DuplicateMedia) -> Element {
                     DuplicateMedia::VideoMatchGroup(a) => {
                         let first_path = a.duplicates().last().unwrap();
                         let file_name = first_path.file_name().unwrap().to_str().unwrap();
-                        let file_size = std::fs::metadata(first_path).unwrap().file_size();
+                        let file_size = std::fs::metadata(first_path).unwrap().len();
                         let real_size = format_size(file_size, DECIMAL);
                         rsx! {
                             div { class: "file-info-internal-right",
