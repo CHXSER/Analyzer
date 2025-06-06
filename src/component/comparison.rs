@@ -117,7 +117,11 @@ fn MediaDisplayLeft(media: DuplicateMedia) -> Element {
                 }
                 DuplicateMedia::VideoMatchGroup(a) => {
                     let first_path = a.duplicates().next().unwrap();
-                    let encoded_path = encode(first_path.to_str().unwrap());
+                    let encoded_path = if cfg!(windows) {
+                        encode(first_path.to_str().unwrap())
+                    } else {
+                        format!("file://{}", first_path.to_str().unwrap()).into()
+                    };
                     rsx! {
                         video {
                             id: "video-left",
@@ -148,7 +152,11 @@ fn MediaDisplayRight(media: DuplicateMedia) -> Element {
                 }
                 DuplicateMedia::VideoMatchGroup(a) => {
                     let last_path = a.duplicates().last().unwrap();
-                    let encoded_path = encode(last_path.to_str().unwrap());
+                    let encoded_path = if cfg!(windows) {
+                        encode(last_path.to_str().unwrap())
+                    } else {
+                        format!("file://{}", last_path.to_str().unwrap()).into()
+                    };
                     rsx! {
                         video {
                             id: "video-right",
